@@ -13,7 +13,17 @@ function App() {
     e.preventDefault(); // Estetään sivun uudelleenlataus
     if (player.trim() === "") return; // Ei lisätä tyhjää nimeä
 
+    // Jos nimi ei ole tyhjä, niin luodaan pelaajaobjekti
+    const newPlayer = {
+      id: Date.now(),
+      name: player,
+      score: 0,
+      blocks: 0,
+    };
+
+    // Luodaan pelaajista uusi lista ja lisätään pelaaja listan loppuun
     setPlayers([...players, player]);
+    // Asetetaan kenttä tyhjäksi
     setPlayer(""); // Tyhjennetään kenttä
   };
 
@@ -47,13 +57,13 @@ function App() {
 
   const testTeams = () => {
     const output = generateTeams();
+
     console.table(output);
   };
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center ">
       <h1 className=" text-2xl font-bold mb-6">Beer Pong Tournament</h1>
-
       {/* Lomake pelaajan lisäämiseen */}
       <form onSubmit={addPlayer} className="flex gap-2 mb-8">
         <input
@@ -94,7 +104,6 @@ function App() {
           <p className="text-slate-500 text-center">No players added yet.</p>
         )}
       </div>
-
       <div>
         <p className="text-center">Number of teams</p>
         <div>
@@ -109,7 +118,6 @@ function App() {
           ))}
         </div>
       </div>
-
       <div>
         <button
           className="w-48 h-14 mx-4 my-4 border-2"
