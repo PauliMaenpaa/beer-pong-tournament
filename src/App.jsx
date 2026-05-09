@@ -2,11 +2,10 @@ import { useState } from "react";
 import "./styles.css";
 
 function App() {
-  const [players, setPlayers] = useState([]); // Lista pelaajista
+  // Lista pelaajista
+  const [players, setPlayers] = useState([]);
   const [player, setPlayer] = useState(""); // Input kentän tila
-
   const [teamCount, setTeamCount] = useState(2);
-
   const [teams, setTeams] = useState([]);
 
   const addPlayer = (e) => {
@@ -22,14 +21,13 @@ function App() {
     };
 
     // Luodaan pelaajista uusi lista ja lisätään pelaaja listan loppuun
-    setPlayers([...players, player]);
+    setPlayers([...players, newPlayer]);
     // Asetetaan kenttä tyhjäksi
     setPlayer(""); // Tyhjennetään kenttä
   };
 
-  const removePlayer = (indexToRemove) => {
-    setPlayers(players.filter((_, index) => index !== indexToRemove));
-    // ? mitä tuo alaviiva tekee?
+  const removePlayer = (idToRemove) => {
+    setPlayers(players.filter((p) => p.id !== idToRemove));
   };
 
   const generateTeams = () => {
@@ -84,14 +82,14 @@ function App() {
       {/* Pelaajalista */}
       <div className="w-full max-w-md">
         <ul className="space-y-3">
-          {players.map((name, index) => (
+          {players.map((p) => (
             <li
-              key={index}
+              key={p.id}
               className="flex justify-between items-center bg-slate-800 p-3 rounded shadow-sm"
             >
-              <span>{name}</span>
+              <span>{p.name}</span>
               <button
-                onClick={() => removePlayer(index)}
+                onClick={() => removePlayer(p.id)}
                 className="text-red-400 hover:text-red-600 text-sm font-semibold uppercase tracking-wider"
               >
                 Remove
@@ -104,6 +102,7 @@ function App() {
           <p className="text-slate-500 text-center">No players added yet.</p>
         )}
       </div>
+
       <div>
         <p className="text-center">Number of teams</p>
         <div>
