@@ -50,13 +50,7 @@ function App() {
       teams[targetTeamIndex].members.push(player);
     });
 
-    return teams;
-  };
-
-  const testTeams = () => {
-    const output = generateTeams();
-
-    console.table(output);
+    setTeams(teams);
   };
 
   return (
@@ -120,10 +114,32 @@ function App() {
       <div>
         <button
           className="w-48 h-14 mx-4 my-4 border-2"
-          onClick={() => testTeams()}
+          onClick={() => generateTeams()}
         >
           Test team generation
         </button>
+
+        <div>
+          <ul className="space-y-3">
+            {teams.map((t) => (
+              <li className="p-2" key={t.id}>
+                <span>{t.name}</span>
+                <span>
+                  {t.members.map((p) => (
+                    <li
+                      className=" bg-slate-800 flex justify-start my-2 p-2 rounded"
+                      key={p.id}
+                    >
+                      <div className="flex-2">{p.name}</div>
+                      <div className="flex-1">{p.score}</div>
+                      <div className="flex-1">{p.blocks}</div>
+                    </li>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
