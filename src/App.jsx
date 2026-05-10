@@ -59,6 +59,17 @@ function App() {
     setTeams(teams);
   };
 
+  const updateTeamName = (id, newName) => {
+    const updatedTeams = teams.map((t) =>
+      t.id === id ? { ...t, name: newName } : t,
+    );
+    setTeams(updatedTeams);
+  };
+
+  const testTeamNames = () => {
+    teams.map((t) => console.log(t.name));
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center ">
       <h1 className=" text-2xl font-bold mb-6">Beer Pong Tournament</h1>
@@ -129,23 +140,31 @@ function App() {
           <ul className="space-y-3">
             {teams.map((t) => (
               <li className="p-2" key={t.id}>
-                <span>{t.name}</span>
+                <input
+                  type="text"
+                  value={t.name}
+                  onChange={(e) => updateTeamName(t.id, e.target.value)}
+                />
                 <span>
                   {t.members.map((p) => (
-                    <li
+                    <span
                       className=" bg-slate-800 flex justify-start my-2 p-2 rounded"
                       key={p.id}
                     >
                       <div className="flex-2">{p.name}</div>
                       <div className="flex-1">{p.score}</div>
                       <div className="flex-1">{p.blocks}</div>
-                    </li>
+                    </span>
                   ))}
                 </span>
               </li>
             ))}
           </ul>
         </div>
+
+        <button className="border-2" onClick={testTeamNames}>
+          Test team names
+        </button>
       </div>
     </div>
   );
