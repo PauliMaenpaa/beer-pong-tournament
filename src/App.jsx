@@ -1,35 +1,23 @@
 import { useState } from "react";
 import "./styles.css";
+import PlayersView from "./views/playersView.jsx"; // Korjattu nimi isolla alkukirjaimella
 
 function App() {
+  // Pelaajien tila siirretty tänne, jotta generateTeams voi käyttää sitä
   const [players, setPlayers] = useState([]);
-  const [player, setPlayer] = useState(""); // Input kentän tila
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
   const [step, setStep] = useState(1);
 
-  // Näkymät:
-  // 1. Pelaajien lisäys
-  // 2. Joukkueiden tarkastelu & nimeäminen
-  // 3. Turnauskaavio (peli käynnissä)
-  // 4. Pelaajatilastot
-
-  const addPlayer = (e) => {
-    e.preventDefault(); // Estetään sivun uudelleenlataus
-    if (player.trim() === "") return; // Ei lisätä tyhjää nimeä
-
-    // Jos nimi ei ole tyhjä, niin luodaan pelaajaobjekti
+  // Funktiot pelaajien hallintaan siirretty tänne
+  const addPlayer = (playerName) => {
     const newPlayer = {
       id: Date.now(),
-      name: player,
+      name: playerName,
       score: 0,
       blocks: 0,
     };
-
-    // Luodaan pelaajista uusi lista ja lisätään pelaaja listan loppuun
     setPlayers([...players, newPlayer]);
-    // Asetetaan kenttä tyhjäksi
-    setPlayer(""); // Tyhjennetään kenttä
   };
 
   const removePlayer = (idToRemove) => {
@@ -37,26 +25,23 @@ function App() {
   };
 
   const generateTeams = () => {
-    // 1. Sekoitetaan pelaajat
     const shuffledTeams = [...players].sort(() => Math.random() - 0.5);
+    const newTeams = []; // Muutettu nimi, jotta ei sekoitu tilaan
 
-    // 2. Luodaan tyhjät joukkueet
-    const teams = [];
     for (let i = 0; i < teamCount; i++) {
-      teams.push({
+      newTeams.push({
         id: i,
-        name: `Team ${String.fromCharCode(65 + i)}`, // A, B, C...
+        name: `Team ${String.fromCharCode(65 + i)}`,
         members: [],
       });
     }
 
-    // 3. Jaetaan pelaajat joukkueisiin
     shuffledTeams.forEach((player, index) => {
       const targetTeamIndex = index % teamCount;
-      teams[targetTeamIndex].members.push(player);
+      newTeams[targetTeamIndex].members.push(player);
     });
 
-    setTeams(teams);
+    setTeams(newTeams);
   };
 
   const updateTeamName = (id, newName) => {
@@ -70,50 +55,25 @@ function App() {
     teams.map((t) => console.log(t.name));
   };
 
+  const previousStep = () => {
+    setStep(step - 1);
+  };
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center ">
-      <h1 className=" text-2xl font-bold mb-6">Beer Pong Tournament</h1>
-      {/* Lomake pelaajan lisäämiseen */}
-      <form onSubmit={addPlayer} className="flex gap-2 mb-8">
-        <input
-          type="text"
-          value={player}
-          onChange={(e) => setPlayer(e.target.value)}
-          placeholder="Enter player name"
-          className="px-4 py-2 rounded bg-slate-800 border border-slate-700 focus:outline-none focus:border-blue-500"
+      {step === 1 && (
+        <PlayersView
+          players={players}
+          addPlayer={addPlayer}
+          removePlayer={removePlayer}
+          nextStep={nextStep}
+          previousStep={previousStep}
         />
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition"
-        >
-          Add Player
-        </button>
-      </form>
-
-      {/* Pelaajalista */}
-      <div className="w-full max-w-md">
-        <ul className="space-y-3">
-          {players.map((p) => (
-            <li
-              key={p.id}
-              className="flex justify-between items-center bg-slate-800 p-3 rounded shadow-sm"
-            >
-              <span>{p.name}</span>
-              <button
-                onClick={() => removePlayer(p.id)}
-                className="text-red-400 hover:text-red-600 text-sm font-semibold uppercase tracking-wider"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {players.length === 0 && (
-          <p className="text-slate-500 text-center">No players added yet.</p>
-        )}
-      </div>
-
+      )}
       <div>
         <p className="text-center">Number of teams</p>
         <div>
@@ -142,6 +102,7 @@ function App() {
               <li className="p-2" key={t.id}>
                 <input
                   type="text"
+                  className="bg-transparent border-b mb-2"
                   value={t.name}
                   onChange={(e) => updateTeamName(t.id, e.target.value)}
                 />
@@ -152,8 +113,8 @@ function App() {
                       key={p.id}
                     >
                       <div className="flex-2">{p.name}</div>
-                      <div className="flex-1">{p.score}</div>
-                      <div className="flex-1">{p.blocks}</div>
+                      <div className="flex-1 ml-4">{p.score}</div>
+                      <div className="flex-1 ml-4">{p.blocks}</div>
                     </span>
                   ))}
                 </span>
@@ -162,7 +123,7 @@ function App() {
           </ul>
         </div>
 
-        <button className="border-2" onClick={testTeamNames}>
+        <button className="border-2 mt-4 p-2" onClick={testTeamNames}>
           Test team names
         </button>
       </div>
