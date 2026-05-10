@@ -2,11 +2,17 @@ import { useState } from "react";
 import "./styles.css";
 
 function App() {
-  // Lista pelaajista
   const [players, setPlayers] = useState([]);
   const [player, setPlayer] = useState(""); // Input kentän tila
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
+  const [step, setStep] = useState(1);
+
+  // Näkymät:
+  // 1. Pelaajien lisäys
+  // 2. Joukkueiden tarkastelu & nimeäminen
+  // 3. Turnauskaavio (peli käynnissä)
+  // 4. Pelaajatilastot
 
   const addPlayer = (e) => {
     e.preventDefault(); // Estetään sivun uudelleenlataus
