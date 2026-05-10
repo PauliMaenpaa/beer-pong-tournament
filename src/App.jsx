@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./styles.css";
 import PlayersView from "./views/playersView.jsx"; // Korjattu nimi isolla alkukirjaimella
+import TeamsView from "./views/teamsView.jsx";
 
 function App() {
   // Pelaajien tila siirretty tänne, jotta generateTeams voi käyttää sitä
@@ -64,7 +65,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center ">
+    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center">
       {step === 1 && (
         <PlayersView
           players={players}
@@ -74,59 +75,20 @@ function App() {
           previousStep={previousStep}
         />
       )}
-      <div>
-        <p className="text-center">Number of teams</p>
-        <div>
-          {[2, 4, 8].map((num) => (
-            <button
-              key={num}
-              onClick={() => setTeamCount(num)}
-              className="w-14 h-14 mx-4 my-4 rounded-full border-2"
-            >
-              {num}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div>
-        <button
-          className="w-48 h-14 mx-4 my-4 border-2"
-          onClick={() => generateTeams()}
-        >
-          Test team generation
-        </button>
 
-        <div>
-          <ul className="space-y-3">
-            {teams.map((t) => (
-              <li className="p-2" key={t.id}>
-                <input
-                  type="text"
-                  className="bg-transparent border-b mb-2"
-                  value={t.name}
-                  onChange={(e) => updateTeamName(t.id, e.target.value)}
-                />
-                <span>
-                  {t.members.map((p) => (
-                    <span
-                      className=" bg-slate-800 flex justify-start my-2 p-2 rounded"
-                      key={p.id}
-                    >
-                      <div className="flex-2">{p.name}</div>
-                      <div className="flex-1 ml-4">{p.score}</div>
-                      <div className="flex-1 ml-4">{p.blocks}</div>
-                    </span>
-                  ))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <button className="border-2 mt-4 p-2" onClick={testTeamNames}>
-          Test team names
-        </button>
-      </div>
+      {step === 2 && (
+        <TeamsView
+          players={players}
+          teamCount={teamCount}
+          teams={teams}
+          nextStep={nextStep}
+          previousStep={previousStep}
+          generateTeams={generateTeams}
+          testTeamNames={testTeamNames}
+          setTeamCount={setTeamCount}
+          updateTeamName={updateTeamName}
+        />
+      )}
     </div>
   );
 }
