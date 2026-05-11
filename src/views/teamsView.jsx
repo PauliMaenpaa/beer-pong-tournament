@@ -6,6 +6,7 @@ function TeamsView({
   teams,
   previousStep,
   nextStep,
+  startTournament,
   generateTeams,
   updateTeamName,
   testTeamNames,
@@ -70,10 +71,10 @@ function TeamsView({
         </button>
         <button
           className="p-2 border flex-1"
-          onClick={nextStep}
+          onClick={startTournament}
           disabled={players.length < 2}
         >
-          Next
+          Start tournament
         </button>
       </div>
     </div>

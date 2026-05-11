@@ -2,15 +2,18 @@ import { useState } from "react";
 import "./styles.css";
 import PlayersView from "./views/playersView.jsx"; // Korjattu nimi isolla alkukirjaimella
 import TeamsView from "./views/teamsView.jsx";
+import BracketView from "./views/bracketView.jsx";
 
 function App() {
   // Pelaajien tila siirretty tänne, jotta generateTeams voi käyttää sitä
   const [players, setPlayers] = useState([]);
+  const [player, setPlayer] = useState("");
+  const [matches, setMatches] = useState([]);
+
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
   const [step, setStep] = useState(1);
 
-  // Funktiot pelaajien hallintaan siirretty tänne
   const addPlayer = (playerName) => {
     const newPlayer = {
       id: Date.now(),
@@ -19,6 +22,81 @@ function App() {
       blocks: 0,
     };
     setPlayers([...players, newPlayer]);
+  };
+
+  const startTournament = () => {
+    createMatches(teams);
+    setStep(3);
+  };
+
+  // 1. Otetaan nykyiset tiimit
+  // 2. Käydään tiimit läpi kaksi kerrallaan
+  // 3. Tallennetaan objekti, jossa nämä kaksi tiimiä
+  const createMatches = (currentTeams) => {
+    const newMatches = [];
+    for (let i = 0; i < currentTeams.length; i += 2) {
+      if (currentTeams[i + 1]) {
+        // Varmistetaan että on pari
+        newMatches.push({
+          id: Date.now() + i,
+          home: currentTeams[i],
+          away: currentTeams[i + 1],
+          winnerId: null,
+          isFinished: false,
+        });
+      }
+    }
+    // 4. Päivitetään tila
+    setMatches(newMatches);
+  };
+
+  // 1. Päivitetään matches-tila
+  // 2. Päivitetty tila pitää sisällään pelaajan uudet tilastot
+  // 3. Käydään matsit läpi, ja jokaiselle matsille suoritetaan parametrina annettu funktio
+  // 4. apufunktiolla päivitetään tiimin jäsenet
+  // 5. Jos tiimin id ei ole teamId, niin palataan (ei ole siis päivityksen kohde)
+  // 6. Palautetaan muuten sama tiimi, mutta käydään pelaajat läpi
+  // 7. jos pelaajan id vastaa playerId, niin päivitetään score/block
+  // 8. Palautetaan muuten sama matsi, mutta kusu
+  const updatePlayerStats = (teamId, playerId, type) => {
+    const updatedMatches = matches.map((match) => {
+      // Apufunktio, joka päivittää tiimin jäsenet
+      const updateTeam = (team) => {
+        if (team.id !== teamId) return team;
+        return {
+          ...team,
+          members: team.members.map((p) =>
+            p.id === playerId ? { ...p, [type]: p[type] + 1 } : p,
+          ),
+        };
+      };
+
+      // 9. palautetaan päivitetyt tiimit
+      return {
+        ...match,
+        home: updateTeam(match.home),
+        away: updateTeam(match.away),
+      };
+    });
+
+    // 10. Asetetaan päivitetty matsi tilanhallintaan
+    setMatches(updatedMatches);
+
+    // 11. Päivitetään myös teams-tila tilastoja varten. Eli päivitetään molemmat tilanhallinnat
+    const updatedTeams = teams.map((team) => {
+      if (team.id === teamId) {
+        return {
+          ...team,
+          members: team.members.map((p) =>
+            p.id === playerId ? { ...p, [type]: p[type] + 1 } : p,
+          ),
+        };
+      }
+      return team;
+    });
+
+    // 12. Päivitetään tilanhallinta
+    setTeams(updatedTeams);
   };
 
   const removePlayer = (idToRemove) => {
@@ -87,7 +165,12 @@ function App() {
           testTeamNames={testTeamNames}
           setTeamCount={setTeamCount}
           updateTeamName={updateTeamName}
+          startTournament={startTournament}
         />
+      )}
+
+      {step === 3 && (
+        <BracketView matches={matches} updatePlayerStats={updatePlayerStats} />
       )}
     </div>
   );
