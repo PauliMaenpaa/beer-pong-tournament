@@ -1,13 +1,8 @@
 import { useState } from "react";
+import { CircleX, CircleArrowRight, CirclePlus } from "lucide-react";
 
 // Komponentin nimen on oltava isolla alkukirjaimella, jotta React tunnistaa sen (PlayersView)
-function PlayersView({
-  players,
-  addPlayer,
-  removePlayer,
-  nextStep,
-  previousStep,
-}) {
+function PlayersView({ players, addPlayer, removePlayer, nextStep }) {
   const [playerNameInput, setPlayerNameInput] = useState("");
 
   const handleSubmit = (e) => {
@@ -20,9 +15,9 @@ function PlayersView({
   };
 
   return (
-    <div>
-      <h1 className=" text-2xl font-bold mb-6">Beer Pong Tournament</h1>
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+    <div className="grid gap-8 grid-cols-1">
+      <h1 className=" text-2xl font-bold">Beer Pong Tournament</h1>
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         <input
           type="text"
           value={playerNameInput}
@@ -32,26 +27,26 @@ function PlayersView({
         />
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition"
+          className="bg-blue-600 hover:bg-blue-700 px-4 rounded font-medium transition flex justify-center items-center"
         >
-          Add Player
+          <CirclePlus />
         </button>
       </form>
 
-      <div className="w-full max-w-md">
-        <ul className="space-y-3">
+      <div>
+        <ul className="grid gap-4 xl:grid-cols-4 md:grid-cols-2">
           {players.map((p) => (
             <li
               key={p.id}
-              className="flex justify-between items-center bg-slate-800 p-3 rounded shadow-sm"
+              className="flex items-center justify-between bg-slate-800 p-2 rounded"
             >
               <span>{p.name}</span>
-              <button
+              <CircleX
                 onClick={() => removePlayer(p.id)}
-                className="text-red-400 hover:text-red-600 text-sm font-semibold uppercase tracking-wider"
-              >
-                Remove
-              </button>
+                size={24}
+                color="red"
+                strokeWidth={2}
+              />
             </li>
           ))}
         </ul>
@@ -61,16 +56,14 @@ function PlayersView({
         )}
       </div>
 
-      <div className="w-full max-w-md flex justify-between">
-        <button className="p-2 border" onClick={previousStep}>
-          Previous step
-        </button>
+      <div className="grid grid-cols-1">
         <button
-          className="p-2 border"
+          className="p-2 flex justify-between items-center gap-4 bg-blue-600 hover:bg-blue-700 px-4 rounded font-medium transition"
           onClick={nextStep}
           disabled={players.length < 2}
         >
-          Next step
+          Team Generation
+          <CircleArrowRight />
         </button>
       </div>
     </div>

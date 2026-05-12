@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CircleCheck } from "lucide-react";
 
 function TeamsView({
   players,
@@ -12,28 +13,29 @@ function TeamsView({
   testTeamNames,
 }) {
   return (
-    <div className="flex flex-col justify-start items-center gap-2">
-      <div>
-        <p className="text-center">Number of teams</p>
+    <div className="grid grid-cols-1 gap-8">
+      <div className="flex justify-center gap-8 items-center">
         {[2, 4, 8].map((num) => (
           <button
             key={num}
             onClick={() => setTeamCount(num)}
-            className="w-14 h-14 mx-4 my-4 rounded-full border"
+            className="w-12 h-12 rounded-full border"
           >
             {num}
           </button>
         ))}
-        <button
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition"
-          onClick={() => generateTeams()}
-        >
-          Generate teams
-        </button>
       </div>
 
+      <div className="flex justify-center gap-8 items-center">
+        <button
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition flex justify-center items-center"
+          onClick={() => generateTeams()}
+        >
+          <CircleCheck />
+        </button>
+      </div>
       <div>
-        <ul className="space-y-3 flex flex-wrap">
+        <ul className="grid xl:grid-cols-2 md:grid-cols-4 gap-4">
           {teams.map((t) => (
             <li className="p-2 basis-1/4" key={t.id}>
               <input
@@ -60,17 +62,23 @@ function TeamsView({
       </div>
 
       <div className="w-full max-w-md flex justify-start">
-        <button className="border p-2 flex-1" onClick={testTeamNames}>
+        <button
+          className="p-2 flex-1 flex justify-center items-center bg-blue-600 hover:bg-blue-700 rounded font-medium transition"
+          onClick={testTeamNames}
+        >
           Lock in team names
         </button>
       </div>
 
       <div className="w-full max-w-md flex justify-start gap-2">
-        <button className="p-2 border flex-1" onClick={previousStep}>
+        <button
+          className="p-2 border flex-1 p-2 flex-1 flex justify-center items-center bg-blue-600 hover:bg-blue-700 rounded font-medium transition"
+          onClick={previousStep}
+        >
           back
         </button>
         <button
-          className="p-2 border flex-1"
+          className="p-2 border flex-1 p-2 flex-1 flex justify-center items-center bg-blue-600 hover:bg-blue-700 rounded font-medium transition"
           onClick={startTournament}
           disabled={players.length < 2}
         >
