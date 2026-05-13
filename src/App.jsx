@@ -1,18 +1,26 @@
 import { useState } from "react";
 import "./styles.css";
-import PlayersView from "./views/playersView.jsx"; // Korjattu nimi isolla alkukirjaimella
+import PlayersView from "./views/playersView.jsx";
 import TeamsView from "./views/teamsView.jsx";
 import BracketView from "./views/bracketView.jsx";
 
 function App() {
-  // Pelaajien tila siirretty tänne, jotta generateTeams voi käyttää sitä
   const [players, setPlayers] = useState([]);
   const [player, setPlayer] = useState("");
   const [matches, setMatches] = useState([]);
-
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
   const [step, setStep] = useState(1);
+
+  const pickWinner = (matchId, teamId) => {
+    const updatedMatches = matches.map((match) => {
+      return match.id === matchId // 1. jos match.id vastaa annettua matchId
+        ? { ...match, winnerId: teamId, isFinished: true } // TRUE: palautetaan uusi päivitetty olio
+        : match; // FALSE: palautetaan alkuperäinen olio
+    });
+    setMatches(updatedMatches);
+    console.log(updatedMatches);
+  };
 
   const addPlayer = (playerName) => {
     const newPlayer = {
@@ -170,7 +178,11 @@ function App() {
       )}
 
       {step === 3 && (
-        <BracketView matches={matches} updatePlayerStats={updatePlayerStats} />
+        <BracketView
+          matches={matches}
+          updatePlayerStats={updatePlayerStats}
+          pickWinner={pickWinner}
+        />
       )}
     </div>
   );

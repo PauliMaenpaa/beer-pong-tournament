@@ -10,7 +10,7 @@ function TeamsView({
   generateTeams,
   updateTeamName,
   testTeamNames,
-  teamCount, // Oletan että tämä tila on käytössä valitun numeron korostamiseen
+  teamCount, // Oletan että tämä tila on käytössä valitun numeron korottamiseen
 }) {
   return (
     <div className="flex flex-col gap-8 text-white p-4">

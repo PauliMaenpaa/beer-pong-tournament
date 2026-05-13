@@ -1,4 +1,4 @@
-function BracketView({ matches, updatePlayerStats }) {
+function BracketView({ matches, updatePlayerStats, pickWinner }) {
   return (
     /* mx-auto ja max-w-4xl (tai pienempi) pitävät sisällön kasassa */
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 text-white animate-in fade-in duration-500 p-4">
@@ -133,10 +133,16 @@ function BracketView({ matches, updatePlayerStats }) {
 
             {/* Voittajapainikkeet pienennettynä */}
             <div className="flex gap-3 mt-6">
-              <button className="flex-1 py-2 text-[11px] font-black uppercase rounded border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white transition tracking-tighter">
+              <button
+                onClick={() => pickWinner(match.id, match.home.id)}
+                className="flex-1 py-2 text-[11px] font-black uppercase rounded border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white transition tracking-tighter"
+              >
                 {match.home.name} Win
               </button>
-              <button className="flex-1 py-2 text-[11px] font-black uppercase rounded border border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition tracking-tighter">
+              <button
+                onClick={() => pickWinner(match.id, match.home.id)}
+                className="flex-1 py-2 text-[11px] font-black uppercase rounded border border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition tracking-tighter"
+              >
                 {match.away.name} Win
               </button>
             </div>
