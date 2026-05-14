@@ -1,3 +1,5 @@
+import { Trophy } from "lucide-react";
+
 function Overview({ matches, players, teams }) {
   const finalMatch = matches[matches.length - 1];
   const winnerTeam = teams.find((team) => team.id === finalMatch?.winnerId);
@@ -20,17 +22,19 @@ function Overview({ matches, players, teams }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
         {/* VOITTAJA-OSIO */}
-        <div className="flex flex-col items-center justify-center bg-[#1a2233] p-10 rounded-2xl border-2 border-yellow-500/40 shadow-[0_0_30px_rgba(234,179,8,0.1)] relative overflow-hidden">
+        <div className="flex gap-4 flex-col items-center justify-center bg-[#1a2233] p-10 rounded-2xl border-2 border-gray-800 relative overflow-hidden">
           {/* Koriste-elementti taustalla */}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
 
-          <p className="text-yellow-500 uppercase tracking-widest text-sm font-bold mb-2">
+          <p className="text-yellow-500 uppercase tracking-widest text-lg font-bold mb-2">
             Tournament Champion
           </p>
-          <div className="text-6xl mb-4">🏆</div>
-          <h2 className="text-4xl font-black text-white text-center">
+          <div className="text-6xl mb-4">
+            <Trophy size={48} />
+          </div>
+          <p className="text-4xl font-black text-white text-center">
             {winnerTeam ? winnerTeam.name : "Finalizing..."}
-          </h2>
+          </p>
         </div>
 
         {/* PISTEPÖRSSIN LISTAUS */}
@@ -85,7 +89,7 @@ function Overview({ matches, players, teams }) {
       {/* Alaosan painike (jos haluat palata alusta tms.) */}
       <button
         onClick={() => window.location.reload()}
-        className="mt-4 px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full text-sm font-bold uppercase tracking-widest transition-all"
+        className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-lg font-bold uppercase transition flex justify-center items-center shadow-lg"
       >
         Start New Tournament
       </button>
