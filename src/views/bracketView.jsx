@@ -1,6 +1,11 @@
 import { CircleArrowRight } from "lucide-react";
 
-function BracketView({ matches, updatePlayerStats, pickWinner }) {
+function BracketView({
+  matches,
+  updatePlayerStats,
+  pickWinner,
+  advanceToNextRound,
+}) {
   return (
     /* mx-auto ja max-w-4xl (tai pienempi) pitävät sisällön kasassa */
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 text-white animate-in fade-in duration-500 p-4">
@@ -9,11 +14,13 @@ function BracketView({ matches, updatePlayerStats, pickWinner }) {
       </h2>
 
       {/* Grid-asettelu, joka pysyy maltillisena myös leveämmällä näytöllä */}
-      <div className="grid gap-x-12 gap-y-16 md:grid-cols-2">
+      <div
+        className={`grid gap-x-12 gap-y-16 ${matches.length < 2 ? "md:grid-cols-1" : "md:grid-cols-2"}`}
+      >
         {matches.map((match, index) => (
           <div
             key={match.id}
-            className="flex flex-col w-full max-w-md mx-auto" /* Rajoitetaan yksittäisen matsin leveyttä */
+            className="flex flex-col w-full mx-auto" /* Rajoitetaan yksittäisen matsin leveyttä */
           >
             {/* Ottelun tunniste */}
             <div className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-center md:text-left">
@@ -155,6 +162,7 @@ function BracketView({ matches, updatePlayerStats, pickWinner }) {
       {/* Nappi seuraavalle kierrokselle */}
       <div>
         <button
+          onClick={() => advanceToNextRound()}
           className="w-full p-4 flex justify-center items-center gap-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold uppercase tracking-wider transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={matches.some((m) => m.winnerId === null)}
         >

@@ -3,6 +3,7 @@ import "./styles.css";
 import PlayersView from "./views/playersView.jsx";
 import TeamsView from "./views/teamsView.jsx";
 import BracketView from "./views/bracketView.jsx";
+import Overview from "./views/overview.jsx";
 
 function App() {
   const [players, setPlayers] = useState([]);
@@ -11,6 +12,25 @@ function App() {
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
   const [step, setStep] = useState(1);
+
+  const advanceToNextRound = () => {
+    // 1. Tarkistetaan että kaikki matsit pelattu
+    const isAllMatchesFinished =
+      matches.length > 0 && matches.every((m) => m.isFinished);
+
+    // 2. Jos ei niin palataan
+    if (!isAllMatchesFinished) return;
+
+    // 3. Lista voittajajoukkueiden ID
+    const winnerIds = matches.map((m) => m.winnerId);
+
+    // 4.
+    const teamsToAdvance = teams.filter((t) => winnerIds.includes(t.id));
+
+    if (teamsToAdvance.length > 0) {
+      createMatches(teamsToAdvance);
+    }
+  };
 
   const pickWinner = (matchId, teamId) => {
     const updatedMatches = matches.map((match) => {
@@ -182,8 +202,11 @@ function App() {
           matches={matches}
           updatePlayerStats={updatePlayerStats}
           pickWinner={pickWinner}
+          advanceToNextRound={advanceToNextRound}
         />
       )}
+
+      <Overview />
     </div>
   );
 }
