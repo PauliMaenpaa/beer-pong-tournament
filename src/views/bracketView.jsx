@@ -1,3 +1,5 @@
+import { CircleArrowRight } from "lucide-react";
+
 function BracketView({ matches, updatePlayerStats, pickWinner }) {
   return (
     /* mx-auto ja max-w-4xl (tai pienempi) pitävät sisällön kasassa */
@@ -20,7 +22,7 @@ function BracketView({ matches, updatePlayerStats, pickWinner }) {
 
             <div className="space-y-6">
               {/* KOTIJOUKKUE */}
-              <div className="flex flex-col">
+              <div className="flex flex-col ">
                 <h3 className="border-b border-gray-600 pb-1 mb-3 text-lg font-bold tracking-wide text-blue-400">
                   {match.home.name}
                 </h3>
@@ -141,13 +143,24 @@ function BracketView({ matches, updatePlayerStats, pickWinner }) {
               </button>
               <button
                 onClick={() => pickWinner(match.id, match.home.id)}
-                className="flex-1 py-2 text-[11px] font-black uppercase rounded border border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition tracking-tighter"
+                className={`flex-1 py-2 text-[11px] font-black uppercase rounded border border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition tracking-tighter`}
               >
                 {match.away.name} Win
               </button>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Nappi seuraavalle kierrokselle */}
+      <div>
+        <button
+          className="w-full p-4 flex justify-center items-center gap-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold uppercase tracking-wider transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={matches.some((m) => m.winnerId === null)}
+        >
+          Next round
+          <CircleArrowRight size={24} />
+        </button>
       </div>
     </div>
   );
