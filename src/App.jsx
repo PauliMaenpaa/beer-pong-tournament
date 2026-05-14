@@ -6,7 +6,7 @@ import BracketView from "./views/bracketView.jsx";
 import Overview from "./views/overview.jsx";
 
 function App() {
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState([""]);
   const [player, setPlayer] = useState("");
   const [matches, setMatches] = useState([]);
   const [teamCount, setTeamCount] = useState(2);
@@ -203,10 +203,13 @@ function App() {
           updatePlayerStats={updatePlayerStats}
           pickWinner={pickWinner}
           advanceToNextRound={advanceToNextRound}
+          nextStep={nextStep}
         />
       )}
 
-      <Overview />
+      {step === 4 && (
+        <Overview matches={matches} players={players} teams={teams} />
+      )}
     </div>
   );
 }

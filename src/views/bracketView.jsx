@@ -5,6 +5,7 @@ function BracketView({
   updatePlayerStats,
   pickWinner,
   advanceToNextRound,
+  nextStep,
 }) {
   return (
     /* mx-auto ja max-w-4xl (tai pienempi) pitävät sisällön kasassa */
@@ -162,7 +163,9 @@ function BracketView({
       {/* Nappi seuraavalle kierrokselle */}
       <div>
         <button
-          onClick={() => advanceToNextRound()}
+          onClick={() =>
+            matches.length > 1 ? advanceToNextRound() : nextStep()
+          }
           className="w-full p-4 flex justify-center items-center gap-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold uppercase tracking-wider transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={matches.some((m) => m.winnerId === null)}
         >
