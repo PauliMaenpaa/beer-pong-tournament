@@ -192,7 +192,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-slate-900 text-white flex flex-col items-center overflow-hidden">
+    <div className="h-dvh bg-slate-900 text-white flex flex-col items-center overflow-hidden">
       {/* Progressiopalkki lukittu yläreunaan */}
       <div className="fixed top-0 left-0 right-0 h-20 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center gap-4 z-50 border-b border-slate-800">
         {[1, 2, 3, 4].map((num) => {
