@@ -1,17 +1,38 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import "./styles.css";
 import PlayersView from "./views/playersView.jsx";
 import TeamsView from "./views/teamsView.jsx";
 import BracketView from "./views/bracketView.jsx";
 import Overview from "./views/overview.jsx";
+import { Dot } from "lucide-react";
 
 function App() {
-  const [players, setPlayers] = useState([""]);
+  const [players, setPlayers] = useState([]);
   const [player, setPlayer] = useState("");
   const [matches, setMatches] = useState([]);
   const [teamCount, setTeamCount] = useState(2);
   const [teams, setTeams] = useState([]);
   const [step, setStep] = useState(1);
+
+  // App-komponentin sisälle:
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // Varoitetaan vain, jos peli on jo aloitettu (step > 1)
+      if (step > 1) {
+        e.preventDefault();
+        e.returnValue = ""; // Tämä vaaditaan, jotta selain näyttää oman varoitusikkunansa
+      }
+    };
+
+    // Lisätään kuuntelija selaimelle
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Siivotaan kuuntelija pois, kun komponentti poistuu (hyvä tapa Reactissa)
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [step]); // Ajetaan uudestaan aina, kun step muuttuu
 
   const advanceToNextRound = () => {
     // 1. Tarkistetaan että kaikki matsit pelattu
@@ -171,45 +192,71 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center">
-      {step === 1 && (
-        <PlayersView
-          players={players}
-          addPlayer={addPlayer}
-          removePlayer={removePlayer}
-          nextStep={nextStep}
-          previousStep={previousStep}
-        />
-      )}
+    <div className="h-screen bg-slate-900 text-white flex flex-col items-center overflow-hidden">
+      {/* Progressiopalkki lukittu yläreunaan */}
+      <div className="fixed top-0 left-0 right-0 h-20 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center gap-4 z-50 border-b border-slate-800">
+        {[1, 2, 3, 4].map((num) => {
+          let ballColor = "bg-slate-700 text-slate-400 border-transparent";
 
-      {step === 2 && (
-        <TeamsView
-          players={players}
-          teamCount={teamCount}
-          teams={teams}
-          nextStep={nextStep}
-          previousStep={previousStep}
-          generateTeams={generateTeams}
-          testTeamNames={testTeamNames}
-          setTeamCount={setTeamCount}
-          updateTeamName={updateTeamName}
-          startTournament={startTournament}
-        />
-      )}
+          if (step === num) {
+            ballColor =
+              "bg-blue-600 text-white border-blue-400 scale-110 shadow-lg shadow-blue-500/20";
+          } else if (step > num) {
+            ballColor = "bg-slate-800 text-green-500 border-green-500/30";
+          }
 
-      {step === 3 && (
-        <BracketView
-          matches={matches}
-          updatePlayerStats={updatePlayerStats}
-          pickWinner={pickWinner}
-          advanceToNextRound={advanceToNextRound}
-          nextStep={nextStep}
-        />
-      )}
+          return (
+            <div
+              key={num}
+              className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border transition-all duration-300 ${ballColor}`}
+            >
+              {step > num ? "✓" : num}
+            </div>
+          );
+        })}
+      </div>
 
-      {step === 4 && (
-        <Overview matches={matches} players={players} teams={teams} />
-      )}
+      {/* Sisältöalue, jossa pt-20 channelaa tilaa palkille. flex-1 ja w-full pitävät näkymät siistinä */}
+      <div className="w-full flex-1 pt-20 overflow-hidden">
+        {step === 1 && (
+          <PlayersView
+            players={players}
+            addPlayer={addPlayer}
+            removePlayer={removePlayer}
+            nextStep={nextStep}
+            previousStep={previousStep}
+          />
+        )}
+
+        {step === 2 && (
+          <TeamsView
+            players={players}
+            teamCount={teamCount}
+            teams={teams}
+            nextStep={nextStep}
+            previousStep={previousStep}
+            generateTeams={generateTeams}
+            testTeamNames={testTeamNames}
+            setTeamCount={setTeamCount}
+            updateTeamName={updateTeamName}
+            startTournament={startTournament}
+          />
+        )}
+
+        {step === 3 && (
+          <BracketView
+            matches={matches}
+            updatePlayerStats={updatePlayerStats}
+            pickWinner={pickWinner}
+            advanceToNextRound={advanceToNextRound}
+            nextStep={nextStep}
+          />
+        )}
+
+        {step === 4 && (
+          <Overview matches={matches} players={players} teams={teams} />
+        )}
+      </div>
     </div>
   );
 }
